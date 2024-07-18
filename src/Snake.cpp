@@ -11,8 +11,6 @@ void keyboardCallback(unsigned char key, int x, int y);
 void specialKeysCallback(int key, int x, int y);
 void timerCallback(int x);
 
-Snake::Snake() : gameLogic(BOARDSIZE.first/2,BOARDSIZE.second/2){}
-
 void Snake::startRendering(int argc, char **argv){
     currentInstance = std::make_shared<Snake>(*this); //set the pointer to an object
     glutInit(&argc, argv);
@@ -33,22 +31,36 @@ void Snake::display(){
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-    for(int i{BOARDSIZE.first}; i>0; i--){
-        for(int j{BOARDSIZE.second}; j>0; j--){
+    for(int i{gameLogic.getBoard().first}; i>0; i--){
+        for(int j{gameLogic.getBoard().second}; j>0; j--){
             glTranslatef( j, -1, -i );
             if((i+j)%2)
-                glColor3f(0.0, 1.0, 0.0);//createColoredWireCube(0.0,1.0,0.0,1);
+                glColor3f(0.0, 1, 0.0);
             else
                 glColor3f(0.0, 0.5, 0.0);
             glutSolidCube(1); //createColoredWireCube(0.0,0.5,0.0,1);
             glTranslatef( -j, 1, i );
         }
     }
-    for(auto cell : gameLogic.getSnake()){
-        glTranslatef( cell.first, 0, -cell.second );
+    auto snake = gameLogic.getSnake();
+    for(short i{0}; i<snake.size(); i++){
+        glTranslatef( snake[i].first, 0, -snake[i].second );
+        if(!i)
+            glColor3f(0.0, 0.0, 1.0);
+        else if(i%2)
+            glColor3f(0.0, 0.0, 0.9);
+        else
+            glColor3f(0.0, 0.0, 0.8);
         glutSolidCube(1);
-        glTranslatef( -cell.first, 0, cell.second );
+        glTranslatef( -snake[i].first, 0, snake[i].second );
     }
+    //FOOD
+    std::pair<short,short> food = gameLogic.getFood();
+    glTranslatef(food.first, 0, -food.second);
+    glColor3f(1.0, 0.0, 0.0);
+    glutSolidCube(1);
+    glTranslatef(-food.first, 0, food.second);
+
     glFlush();
     glutSwapBuffers();
 }

@@ -5,7 +5,6 @@
 #include <memory>
 
 class Snake {
-    const std::pair<short,short> BOARDSIZE{10,10};
     GameLogic gameLogic;
     const short FPS = 3;
     const short WIDTH = 800, HEIGHT = 600;
@@ -20,7 +19,6 @@ class Snake {
     void specialKeys(int key, int x, int y);
     void timer(int x);
 public:
-    Snake();
     void startRendering(int argc, char * argv[]);
     //these functions set pointer declared in Snake.cpp on proper callback
     friend void displayCallback();

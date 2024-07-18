@@ -1,11 +1,17 @@
 #include "../include/GameLogic.h"
+#include<cstdlib>
+#include <time.h>
+#include <algorithm>
 
-GameLogic::GameLogic(short beginX, short beginY) {
-    snake.push_back({beginX,beginY});
-    snake.push_back({beginX-1,beginY});
-    snake.push_back({beginX-2,beginY});
+GameLogic::GameLogic() {
+    srand(time(NULL));
+    food={rand()%BOARDSIZE.first,rand()%BOARDSIZE.second};
+    snake.push_back({BOARDSIZE.first/2,BOARDSIZE.second/2});
+    snake.push_back({BOARDSIZE.first/2-1,BOARDSIZE.second/2});
+    snake.push_back({BOARDSIZE.first/2-2,BOARDSIZE.second/2});
 }
 void GameLogic::move(){
+    foodRandomization();
     for(short i=snake.size()-1; i>0; i--)
         snake[i]=snake[i-1];
     switch (direction) {
@@ -46,4 +52,14 @@ void GameLogic::changeDirection(char dir) {
                 direction='d';
             break;
     }
+}
+std::pair<short,short> GameLogic::getBoard(){
+    return BOARDSIZE;
+}
+std::pair<short,short> GameLogic::getFood(){
+    return food;
+}
+void GameLogic::foodRandomization() {
+    while(std::find(snake.begin(),snake.end(),food)!=snake.end())
+        food={rand()%BOARDSIZE.first+1,rand()%BOARDSIZE.second+1};
 }

@@ -3,12 +3,17 @@
 #include <vector>
 
 class GameLogic {
+    const std::pair<short,short> BOARDSIZE{10,10};
     char direction = 'r'; //default direction -> right
     std::vector<std::pair<short,short>> snake; //snake cells
+    std::pair<short,short> food;
+    void foodRandomization();
 public:
-    GameLogic(short beginX, short beginY); //snake starting position
+    GameLogic(); //snake starting position
     void move();
     void changeDirection(char dir);
+    std::pair<short,short> getBoard();
+    std::pair<short,short> getFood();
     std::vector<std::pair<short,short>> getSnake();
 };
 
