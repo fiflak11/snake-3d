@@ -2,10 +2,16 @@
 #include<cstdlib>
 #include <time.h>
 #include <algorithm>
+#include <iostream>
 
 GameLogic::GameLogic() {
     srand(time(NULL));
-    food={rand()%BOARDSIZE.first,rand()%BOARDSIZE.second};
+    restart();
+}
+void GameLogic::restart() {
+    snake.clear();
+    direction='r';
+    food={rand()%BOARDSIZE.first+1,rand()%BOARDSIZE.second+1};
     snake.push_back({BOARDSIZE.first/2,BOARDSIZE.second/2});
     snake.push_back({BOARDSIZE.first/2-1,BOARDSIZE.second/2});
     snake.push_back({BOARDSIZE.first/2-2,BOARDSIZE.second/2});
@@ -60,6 +66,21 @@ std::pair<short,short> GameLogic::getFood(){
     return food;
 }
 void GameLogic::foodRandomization() {
-    while(std::find(snake.begin(),snake.end(),food)!=snake.end())
+    bool f=true;
+    while(std::find(snake.begin(),snake.end(),food)!=snake.end()){
         food={rand()%BOARDSIZE.first+1,rand()%BOARDSIZE.second+1};
+        if(f){
+            f=false;
+            snake.push_back(snake.back());
+        }
+    }
+}
+bool GameLogic::checkCollisions() {
+    if(std::find(snake.begin()+1,snake.end(),snake.front())!=snake.end())
+        return true;
+    else if(snake.front().first>BOARDSIZE.first || snake.front().first<=0)
+        return true;
+    else if(snake.front().second>BOARDSIZE.second || snake.front().second<=0)
+        return true;
+    return false;
 }

@@ -46,7 +46,7 @@ void Snake::display(){
     for(short i{0}; i<snake.size(); i++){
         glTranslatef( snake[i].first, 0, -snake[i].second );
         if(!i)
-            glColor3f(0.0, 0.0, 1.0);
+            glColor3f(0.3, 0.3, 1.0);
         else if(i%2)
             glColor3f(0.0, 0.0, 0.9);
         else
@@ -60,7 +60,8 @@ void Snake::display(){
     glColor3f(1.0, 0.0, 0.0);
     glutSolidCube(1);
     glTranslatef(-food.first, 0, food.second);
-
+    if(gameLogic.checkCollisions())
+        gameLogic.restart();
     glFlush();
     glutSwapBuffers();
 }

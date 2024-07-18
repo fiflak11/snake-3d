@@ -10,8 +10,10 @@ class GameLogic {
     void foodRandomization();
 public:
     GameLogic(); //snake starting position
-    void move();
+    void restart();
+    void move(); //10fps -> 10 function calls
     void changeDirection(char dir);
+    bool checkCollisions(); //if the snake hits itself or falls off the board
     std::pair<short,short> getBoard();
     std::pair<short,short> getFood();
     std::vector<std::pair<short,short>> getSnake();
