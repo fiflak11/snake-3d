@@ -4,8 +4,6 @@ project(snake3d)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(snake3d src/main.cpp
-        src/GlutHandling.cpp
-        include/GlutHandling.h
         src/GameLogic.cpp
         include/GameLogic.h
         src/Snake.cpp
