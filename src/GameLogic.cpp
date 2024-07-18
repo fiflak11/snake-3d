@@ -30,19 +30,19 @@ std::vector<std::pair<short,short>> GameLogic::getSnake() {
 void GameLogic::changeDirection(char dir) {
     switch (dir) {
         case 'r':
-            if(dir!='l')
+            if(direction!='l')
                 direction='r';
             break;
         case 'l':
-            if(dir!='r')
+            if(direction!='r')
                 direction='l';
             break;
         case 'u':
-            if(dir!='d')
+            if(direction!='d')
                 direction='u';
             break;
         case 'd':
-            if(dir!='u')
+            if(direction!='u')
                 direction='d';
             break;
     }

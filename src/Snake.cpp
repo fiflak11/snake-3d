@@ -33,21 +33,22 @@ void Snake::display(){
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-    glColor3f( 0.0, 1.0, 0.0 );
-    for(int i{0}; i<BOARDSIZE.first; i++){
-        for(int j{0}; j<BOARDSIZE.second; j++){
-            glTranslatef( j, 0, -i );
-            glutWireCube( 1.0 );
-            glTranslatef( -j, -0, i );
+    for(int i{BOARDSIZE.first}; i>0; i--){
+        for(int j{BOARDSIZE.second}; j>0; j--){
+            glTranslatef( j, -1, -i );
+            if((i+j)%2)
+                glColor3f(0.0, 1.0, 0.0);//createColoredWireCube(0.0,1.0,0.0,1);
+            else
+                glColor3f(0.0, 0.5, 0.0);
+            glutSolidCube(1); //createColoredWireCube(0.0,0.5,0.0,1);
+            glTranslatef( -j, 1, i );
         }
     }
-    glColor3f( 1.0, 1.0, 1.0 );
     for(auto cell : gameLogic.getSnake()){
         glTranslatef( cell.first, 0, -cell.second );
-        glutWireCube( 1.0 );
+        glutSolidCube(1);
         glTranslatef( -cell.first, 0, cell.second );
     }
-
     glFlush();
     glutSwapBuffers();
 }
@@ -58,7 +59,14 @@ void Snake::reshape(int w,int h){
     glFrustum( - 2.0, 2.0, - 2.0, 2.0, 1.0, 100.0 );
 }
 void Snake::keyboard(unsigned char key, int x, int y){
-
+    if( key == 'w' )
+        gameLogic.changeDirection('u');
+    if( key == 's' )
+        gameLogic.changeDirection('d');
+    if( key == 'a' )
+        gameLogic.changeDirection('l');
+    if( key == 'd' )
+        gameLogic.changeDirection('r');
 }
 void Snake::specialKeys(int key, int x, int y){
 
@@ -68,7 +76,6 @@ void Snake::timer(int x){
     glutPostRedisplay();
     glutTimerFunc(1000/FPS,timerCallback,0);
 }
-
 void displayCallback() {
     if (currentInstance){
         currentInstance->display();
