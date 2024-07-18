@@ -2,6 +2,17 @@
 #include <GL/glut.h>
 #include <memory>
 #include <iostream>
+Snake::Snake() {
+    float resolution=1;
+    for(float i{5},j{5}; i<15; i+=resolution,j-=resolution)
+        cameraCircle.push_back({i,j});
+    for(float i{15},j{-5}; i>5; i-=resolution,j-=resolution)
+        cameraCircle.push_back({i,j});
+    for(float i{5},j{-15}; i>-5; i-=resolution,j+=resolution)
+        cameraCircle.push_back({i,j});
+    for(float i{-5},j{-5}; i<5; i+=resolution,j+=resolution)
+        cameraCircle.push_back({i,j});
+}
 
 std::shared_ptr<Snake> currentInstance=nullptr; //glut functions require callbacks
 //so I create a pointer instead of making every function static
@@ -26,12 +37,13 @@ void Snake::startRendering(int argc, char **argv){
     glutMainLoop();
 }
 void Snake::display(){
+    static auto currentCameraPos = cameraCircle.begin();
     glClearColor( 0.0, 0.0, 0.0, 1.0 );
     glClear( GL_COLOR_BUFFER_BIT );
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
-    gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-    for(int i{gameLogic.getBoard().first}; i>0; i--){
+    gluLookAt(cameraCircle[cameraCirclePos].first, eyeY, cameraCircle[cameraCirclePos].second, centerX, centerY, centerZ, upX, upY, upZ);
+    for(int i{gameLogic.getBoard().first}; i>0; i--){ //drawing board
         for(int j{gameLogic.getBoard().second}; j>0; j--){
             glTranslatef( j, -1, -i );
             if((i+j)%2)
@@ -42,20 +54,19 @@ void Snake::display(){
             glTranslatef( -j, 1, i );
         }
     }
-    auto snake = gameLogic.getSnake();
-    for(short i{0}; i<snake.size(); i++){
-        glTranslatef( snake[i].first, 0, -snake[i].second );
-        if(!i)
+    auto snake = gameLogic.getSnake(); //drawing snake
+    for(short i{0}; i<snake.size(); i++) {
+        glTranslatef(snake[i].first, 0, -snake[i].second);
+        if (!i)
             glColor3f(0.3, 0.3, 1.0);
-        else if(i%2)
+        else if (i % 2)
             glColor3f(0.0, 0.0, 0.9);
         else
             glColor3f(0.0, 0.0, 0.8);
         glutSolidCube(1);
-        glTranslatef( -snake[i].first, 0, snake[i].second );
+        glTranslatef(-snake[i].first, 0, snake[i].second);
     }
-    //FOOD
-    std::pair<short,short> food = gameLogic.getFood();
+    std::pair<short,short> food = gameLogic.getFood(); //drawing food
     glTranslatef(food.first, 0, -food.second);
     glColor3f(1.0, 0.0, 0.0);
     glutSolidCube(1);
@@ -80,9 +91,35 @@ void Snake::keyboard(unsigned char key, int x, int y){
         gameLogic.changeDirection('l');
     if( key == 'd' )
         gameLogic.changeDirection('r');
+    if( key == 'y' )
+        centerX+=1;
+    if( key == 'h' )
+        centerX-=1;
+    if( key == 'u' )
+        centerY+=1;
+    if( key == 'j' )
+        centerY-=1;
+    if( key == 'i' )
+        centerZ+=1;
+    if( key == 'k' )
+        centerZ-=1;
+    std::cout<<centerX<<" "<<centerY<<" "<<centerZ<<" "<<std::endl;
 }
 void Snake::specialKeys(int key, int x, int y){
-
+    switch(key){
+        case GLUT_KEY_RIGHT:
+            if(cameraCirclePos==cameraCircle.size()-1)
+                cameraCirclePos=0;
+            else
+                cameraCirclePos++;
+            break;
+        case GLUT_KEY_LEFT:
+            if(cameraCirclePos==0)
+                cameraCirclePos=cameraCircle.size()-1;
+            else
+                cameraCirclePos--;
+            break;
+    }
 }
 void Snake::timer(int x){
     gameLogic.move();

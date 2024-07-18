@@ -2,7 +2,6 @@
 #include<cstdlib>
 #include <time.h>
 #include <algorithm>
-#include <iostream>
 
 GameLogic::GameLogic() {
     srand(time(NULL));
@@ -34,7 +33,6 @@ void GameLogic::move(){
             snake[0].second--;
             break;
     }
-
 }
 std::vector<std::pair<short,short>> GameLogic::getSnake() {
     return snake;
