@@ -1,7 +1,7 @@
-#include "../include/Game.h"
+#include "../include/Snake.h"
 
 int main(int argc, char * argv[]) {
-    Game game;
-    game.start(argc,argv);
+    Snake snake;
+    snake.startRendering(argc,argv);
     return 0;
 }

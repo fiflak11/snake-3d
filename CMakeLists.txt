@@ -8,7 +8,7 @@ add_executable(snake3d src/main.cpp
         include/GlutHandling.h
         src/GameLogic.cpp
         include/GameLogic.h
-        src/Game.cpp
-        include/Game.h)
+        src/Snake.cpp
+        include/Snake.h)
 
 target_link_libraries(snake3d -lglew32 -lOpenGL32 -lfreeglut -lglu32)
